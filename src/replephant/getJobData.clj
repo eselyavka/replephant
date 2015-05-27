@@ -1,0 +1,5 @@
+(def jobs (load-jobs "/local/path/to/hadoop/job-history-root-dir"))
+(defn getJobData [user] (map #(vals %) (map #(select-keys % [:mapred.reduce.tasks, :mapred.map.tasks, :submit-time]) (filter #(= (:user.name % 0) user) jobs))))
+(def mrdata (getJobData "eselyavka"))
+(use 'clojure.java.io)
+(with-open [wrtr (writer "/tmp/test.txt")](doseq [i mrdata] (.write wrtr (apply str (interpose ", " i)))(.write wrtr "\n")))
