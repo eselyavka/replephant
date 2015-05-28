@@ -2,4 +2,4 @@
 (defn getJobData [user] (map #(vals %) (map #(select-keys % [:mapred.reduce.tasks, :mapred.map.tasks, :submit-time]) (filter #(= (:user.name % 0) user) jobs))))
 (def mrdata (getJobData "eselyavka"))
 (use 'clojure.java.io)
-(with-open [wrtr (writer "/tmp/test.txt")](doseq [i mrdata] (.write wrtr (apply str (interpose ", " i)))(.write wrtr "\n")))
+(with-open [wrtr (writer "/tmp/test.txt")](doseq [i mrdata] (.write wrtr (apply str (interpose ", " (cons (quot (first i ) 1000) (rest i) ) ) ))(.write wrtr "\n")))
